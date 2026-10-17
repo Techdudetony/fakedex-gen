@@ -19,8 +19,9 @@ Every key is optional while developing:
 | `ANTHROPIC_API_KEY` | Writing the dex entry and image prompt (Claude) | Placeholder text |
 | `GEMINI_API_KEY` | Drawing the fakemon (Gemini image model) | Placeholder images |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Storing entries and images | Saved to `.data/` locally |
+| `FAKEDEX_PASSWORD` | Password-protecting the whole site (any username) | Site is open to anyone |
 
-To use Supabase, run [`supabase/schema.sql`](supabase/schema.sql) once in the Supabase SQL editor. It creates the `entries` table and a public `fakemon-images` bucket. Supabase is required when deploying to Vercel, since the local `.data/` folder doesn't persist there.
+To use Supabase, run [`supabase/schema.sql`](supabase/schema.sql) once in the Supabase SQL editor. It creates the `entries` table and a public `fakemon-images` bucket. Supabase is required when deploying to Vercel, since the local `.data/` folder doesn't persist there. Set `FAKEDEX_PASSWORD` on any public deployment, or anyone who finds it can spend your API credits.
 
 ## How it works
 
