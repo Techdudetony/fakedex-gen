@@ -127,7 +127,8 @@ export const SaveEntrySchema = z.object({
   text: GeneratedTextSchema,
   image: z.object({
     mimeType: z.enum(["image/png", "image/jpeg", "image/webp", "image/svg+xml"]),
-    data: z.string(),
+    // About 15 MB decoded; generated images are well under this.
+    data: z.string().max(20_000_000),
   }),
 });
 export type SaveEntryRequest = z.infer<typeof SaveEntrySchema>;

@@ -93,6 +93,9 @@ const IMAGE_DIR = path.join(DATA_DIR, "images");
 const INDEX_FILE = path.join(DATA_DIR, "entries.json");
 
 class LocalStore implements DexStore {
+  /** Saves run one at a time so two overlapping saves can't take the same number or drop an entry. */
+  private saving: Promise<unknown> = Promise.resolve();
+
   private async readAll(): Promise<DexEntry[]> {
     try {
       return JSON.parse(await readFile(INDEX_FILE, "utf8"));
@@ -109,7 +112,13 @@ class LocalStore implements DexStore {
     return (await this.readAll()).find((e) => e.id === id) ?? null;
   }
 
-  async save(req: SaveEntryRequest) {
+  save(req: SaveEntryRequest): Promise<DexEntry> {
+    const result = this.saving.then(() => this.saveNow(req));
+    this.saving = result.catch(() => {});
+    return result;
+  }
+
+  private async saveNow(req: SaveEntryRequest) {
     await mkdir(IMAGE_DIR, { recursive: true });
     const entries = await this.readAll();
     const id = randomUUID();
